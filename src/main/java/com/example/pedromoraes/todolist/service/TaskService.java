@@ -34,5 +34,26 @@ public class TaskService {
             return ResponseEntity.notFound().build();
         }
     }
+    
+    public ResponseEntity<Task> updateTaskById(Task task, Long id){
+    	return taskRepository.findById(id)
+    			.map(taskToUpdate ->{
+    				taskToUpdate.setTask(task.getTask());
+    				taskToUpdate.setDescription(task.getDescription());
+    				taskToUpdate.setDescription(task.getDescription());
+    				taskToUpdate.setDeadLine(task.getDeadLine());
+    				Task updated = taskRepository.save(taskToUpdate);
+    				return ResponseEntity.ok().body(updated);
+    				
+    		}).orElse(ResponseEntity.notFound().build());
+    }
 
+    public ResponseEntity<Object> deleteTaskById(Long id){
+        return taskRepository.findById(id)
+                .map(taskToDelete -> {
+                    taskRepository.deleteById(id);
+                    return ResponseEntity.noContent().build();
+                }).orElse(ResponseEntity.notFound().build());
+    }
+    
 }
